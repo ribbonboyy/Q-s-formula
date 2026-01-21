@@ -87,4 +87,80 @@
   <label>Followers</label>
   <input type="number" id="followers">
 
-  <label>Gro
+  <label>Group Members</label>
+  <input type="number" id="groups">
+
+  <label>Limited Value (RAP)</label>
+  <input type="number" id="rap">
+
+  <button onclick="calculate()">Calculate QB</button>
+
+  <div class="result" id="result"></div>
+
+  <h2>Leaderboard</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>User</th>
+        <th>QB</th>
+      </tr>
+    </thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+</div>
+
+<script>
+function modernBC(p, m, f, fol, g, rap) {
+  const visits = 25 * (1 - 1 / (1 + 0.15 * Math.log(1 + p / 10000)));
+  const months = 15 * (1 - 1 / (1 + m / 60));
+  const friends = 10 * (1 - 1 / (1 + f / 200)));
+  const followers = 20 * (1 - 1 / (1 + Math.log(1 + fol / 1000)));
+  const groups = 15 * (1 - 1 / (1 + Math.log(1 + g / 500)));
+  const rapScore = 10 * (1 - 1 / (1 + Math.log(1 + rap / 50000)));
+
+  return visits + months + friends + followers + groups + rapScore;
+}
+
+function calculate() {
+  const username = document.getElementById("username").value || "Anonymous";
+  const p = Number(visits.value);
+  const m = Number(months.value);
+  const f = Number(friends.value);
+  const fol = Number(followers.value);
+  const g = Number(groups.value);
+  const rap = Number(rap.value);
+
+  const bc = modernBC(p, m, f, fol, g, rap);
+  const qb = Math.round(bc * 10);
+
+  document.getElementById("result").innerText =
+    `Your score: ${qb} QB`;
+
+  saveScore(username, qb);
+  loadLeaderboard();
+}
+
+function saveScore(user, qb) {
+  const data = JSON.parse(localStorage.getItem("qbLeaderboard") || "[]");
+  data.push({ user, qb });
+  data.sort((a, b) => b.qb - a.qb);
+  localStorage.setItem("qbLeaderboard", JSON.stringify(data.slice(0, 20)));
+}
+
+function loadLeaderboard() {
+  const data = JSON.parse(localStorage.getItem("qbLeaderboard") || "[]");
+  const tbody = document.getElementById("leaderboard");
+  tbody.innerHTML = "";
+
+  data.forEach(row => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${row.user}</td><td>${row.qb}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+loadLeaderboard();
+</script>
+</body>
+</html>
+

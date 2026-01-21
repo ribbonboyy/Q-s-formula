@@ -2,7 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Q-Bloxxers Calculator</title>
+  <title>Qwertz' QB calculator</title>
+
+  <!-- Optional: suppress favicon error -->
+  <link rel="icon" href="data:,">
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -16,7 +20,7 @@
     }
 
     .container {
-      max-width: 700px;
+      max-width: 600px;
       margin: auto;
       background: #020617;
       padding: 30px;
@@ -37,130 +41,92 @@
     }
 
     button {
-      margin-top: 20px;
+      margin-top: 25px;
       padding: 10px 20px;
       background: #38bdf8;
       border: none;
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
+      width: 100%;
     }
 
     .result {
       margin-top: 25px;
       font-size: 20px;
-    }
-
-    table {
-      width: 100%;
-      margin-top: 30px;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      padding: 8px;
-      border-bottom: 1px solid #334155;
-      text-align: left;
-    }
-
-    th {
-      color: #38bdf8;
+      font-weight: bold;
+      color: #a5f3fc;
     }
   </style>
 </head>
+
 <body>
-<div class="container">
-  <h1>QB (Q-Bloxxers) Calculator</h1>
+  <div class="container">
+    <h1>Qwertz' QB calculator</h1>
 
-  <label>Username (optional)</label>
-  <input id="username">
+    <label>Username (optional)</label>
+    <input id="username" placeholder="Roblox username (optional)">
 
-  <label>Place Visits</label>
-  <input type="number" id="visits">
+    <label>Place Visits</label>
+    <input type="number" id="visits">
 
-  <label>Months Played</label>
-  <input type="number" id="months">
+    <label>Months Played</label>
+    <input type="number" id="months">
 
-  <label>Friends</label>
-  <input type="number" id="friends">
+    <label>Friends</label>
+    <input type="number" id="friends">
 
-  <label>Followers</label>
-  <input type="number" id="followers">
+    <label>Followers</label>
+    <input type="number" id="followers">
 
-  <label>Group Members</label>
-  <input type="number" id="groups">
+    <label>Group Members</label>
+    <input type="number" id="groups">
 
-  <label>Limited Value (RAP)</label>
-  <input type="number" id="rap">
+    <label>Limited Value (RAP)</label>
+    <input type="number" id="rap">
 
-  <button onclick="calculate()">Calculate QB</button>
+    <button onclick="calculate()">Calculate QB</button>
 
-  <div class="result" id="result"></div>
-
-  <h2>Leaderboard</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>User</th>
-        <th>QB</th>
-      </tr>
-    </thead>
-    <tbody id="leaderboard"></tbody>
-  </table>
-</div>
+    <div class="result" id="result"></div>
+  </div>
 
 <script>
 function modernBC(p, m, f, fol, g, rap) {
-  const visits = 25 * (1 - 1 / (1 + 0.15 * Math.log(1 + p / 10000)));
-  const months = 15 * (1 - 1 / (1 + m / 60));
-  const friends = 10 * (1 - 1 / (1 + f / 200)));
-  const followers = 20 * (1 - 1 / (1 + Math.log(1 + fol / 1000)));
-  const groups = 15 * (1 - 1 / (1 + Math.log(1 + g / 500)));
-  const rapScore = 10 * (1 - 1 / (1 + Math.log(1 + rap / 50000)));
+  const visits =
+    25 * (1 - 1 / (1 + 0.15 * Math.log(1 + p / 10000)));
+
+  const months =
+    15 * (1 - 1 / (1 + m / 60));
+
+  const friends =
+    10 * (1 - 1 / (1 + f / 200));
+
+  const followers =
+    20 * (1 - 1 / (1 + Math.log(1 + fol / 1000)));
+
+  const groups =
+    15 * (1 - 1 / (1 + Math.log(1 + g / 500)));
+
+  const rapScore =
+    10 * (1 - 1 / (1 + Math.log(1 + rap / 50000)));
 
   return visits + months + friends + followers + groups + rapScore;
 }
 
 function calculate() {
-  const username = document.getElementById("username").value || "Anonymous";
-  const p = Number(visits.value);
-  const m = Number(months.value);
-  const f = Number(friends.value);
-  const fol = Number(followers.value);
-  const g = Number(groups.value);
-  const rap = Number(rap.value);
+  const username =
+    document.getElementById("username").value || "Anonymous";
+
+  const p = Number(document.getElementById("visits").value);
+  const m = Number(document.getElementById("months").value);
+  const f = Number(document.getElementById("friends").value);
+  const fol = Number(document.getElementById("followers").value);
+  const g = Number(document.getElementById("groups").value);
+  const rap = Number(document.getElementById("rap").value);
 
   const bc = modernBC(p, m, f, fol, g, rap);
   const qb = Math.round(bc * 10);
 
   document.getElementById("result").innerText =
-    `Your score: ${qb} QB`;
-
-  saveScore(username, qb);
-  loadLeaderboard();
-}
-
-function saveScore(user, qb) {
-  const data = JSON.parse(localStorage.getItem("qbLeaderboard") || "[]");
-  data.push({ user, qb });
-  data.sort((a, b) => b.qb - a.qb);
-  localStorage.setItem("qbLeaderboard", JSON.stringify(data.slice(0, 20)));
-}
-
-function loadLeaderboard() {
-  const data = JSON.parse(localStorage.getItem("qbLeaderboard") || "[]");
-  const tbody = document.getElementById("leaderboard");
-  tbody.innerHTML = "";
-
-  data.forEach(row => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${row.user}</td><td>${row.qb}</td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-loadLeaderboard();
-</script>
-</body>
-</html>
+    `${username} has ${qb} QB`;
 

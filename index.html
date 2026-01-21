@@ -3,8 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>QB (Q-Bloxxers) Calculator</title>
-
-  <!-- Optional: suppress favicon error -->
   <link rel="icon" href="data:,">
 
   <style>
@@ -15,16 +13,16 @@
       padding: 40px;
     }
 
-    h1 {
-      color: #38bdf8;
-    }
-
     .container {
       max-width: 600px;
       margin: auto;
       background: #020617;
       padding: 30px;
       border-radius: 10px;
+    }
+
+    h1 {
+      color: #38bdf8;
     }
 
     label {
@@ -42,13 +40,13 @@
 
     button {
       margin-top: 25px;
-      padding: 10px 20px;
+      padding: 10px;
+      width: 100%;
       background: #38bdf8;
       border: none;
       border-radius: 5px;
-      cursor: pointer;
       font-weight: bold;
-      width: 100%;
+      cursor: pointer;
     }
 
     .result {
@@ -65,7 +63,7 @@
     <h1>QB (Q-Bloxxers) Calculator</h1>
 
     <label>Username (optional)</label>
-    <input id="username" placeholder="Roblox username">
+    <input id="username">
 
     <label>Place Visits</label>
     <input type="number" id="visits">
@@ -85,7 +83,7 @@
     <label>Limited Value (RAP)</label>
     <input type="number" id="rap">
 
-    <button onclick="calculate()">Calculate QB</button>
+    <button id="calcBtn">Calculate QB</button>
 
     <div class="result" id="result"></div>
   </div>
@@ -130,6 +128,9 @@ function calculate() {
   document.getElementById("result").innerText =
     `${username} has ${qb} QB`;
 }
+
+/* Bind AFTER DOM is loaded */
+document.getElementById("calcBtn").addEventListener("click", calculate);
 </script>
 </body>
-</html>
+</ht
